@@ -1,0 +1,63 @@
+--- 
+application: 
+      name: WebApp1
+      type: web-application
+      group: Browser
+      tags: 
+        - 
+          react
+      links: 
+        - 
+          name: WebApp1Edge
+        - 
+          name: IdentityProvider
+--- 
+application: 
+      name: IdentityProvider
+      type: edge-api
+      group: Web
+      links: 
+        - 
+          name: AuthenticationService
+        - 
+          name: SecurityService
+--- 
+application: 
+      name: AuthenticationService
+      type: internal-api
+      group: App
+      tags: 
+        - 
+          security
+      links:
+        -
+          name: AuthenticationDb
+--- 
+application: 
+      name: AuthenticationDb
+      type: database-schema
+      group: SQL_DATABASE
+--- 
+application: 
+      name: SecurityService
+      type: internal-api
+      group: App
+      tags: 
+        - 
+          security
+--- 
+application: 
+      name: WebApp1Edge
+      type: edge-api 
+      group: Web 
+      links: 
+        - 
+          name: BackendService
+        - 
+          name: SecurityService
+--- 
+application: 
+      name: BackendService
+      type: backend-api
+      group: App
+

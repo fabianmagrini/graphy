@@ -1,0 +1,71 @@
+digraph hierarchy {
+
+nodesep=1.0 // increases the separation between nodes
+
+node [color=Red,fontname=Courier,shape=box] //All nodes will this shape and colour
+edge [color=Blue, style=dashed] //All the lines look like this
+
+{{range .Applications }}
+    {{range .Groups }}
+        subgraph cluster{{ . | replace " "}} {
+            label = "{{ . }}"
+            {{if (eq . "fileshare")}}
+                bgcolor = white
+             {{else if (eq . "windowsservice")}}
+                bgcolor = white
+            {{else if (eq . "scheduledtask")}}
+                bgcolor = white
+            {{end}}
+    {{end}}
+    {{if .Group }}
+        subgraph cluster{{ .Group | replace " " }} {
+            label = "{{ .Group }}"
+            {{if (eq .Type "database-schema")}}
+                bgcolor = white
+            {{end}}
+    {{end}}
+    {{ printf "%s" .Name }} [
+        {{if (eq .Type "web-application")}}
+            {{range .Tags }}
+                {{if (eq . "react")}}
+                    color=cyan,style=filled
+                {{else if (eq . "angular")}}
+                    color=tomato,style=filled
+                {{end}}
+            {{end}}
+        {{else if (eq .Type "edge-api")}}
+            color=grey,style=filled
+        {{else if (eq .Type "experience-api")}}
+            color=green,style=filled
+        {{else if (eq .Type "platform-api")}}
+            color=orange,style=filled
+        {{else if (or (or (eq .Type "database") (eq .Type "database-schema")) (eq .Type "database-ods")) }}
+            shape="cylinder",width=1.0,height=1.0
+        {{else if (eq .Type "external-api")}}
+            color=plum,style=filled
+        {{else if (eq .Type "external-application")}}
+            color=plum,style=filled
+        {{else if (eq .Type "MQ")}}
+            shape="folder"
+        {{else if (eq .Type "fileshare")}}
+            shape="folder"
+        {{end}}
+        {{range .Tags }}
+            {{if (eq . "database")}}
+                color=cyan,style=filled
+            {{end}}
+        {{end}}
+    ]
+    {{if .Group }}
+        }
+    {{end}}
+    {{range .Groups }}
+        }
+    {{end}}
+{{end}}
+
+{{range .Applications }}
+    {{ printf "%s" .Name }} -> { {{range .Links }} {{ printf "%s" .Name }} {{end}} }
+{{end}}
+
+}

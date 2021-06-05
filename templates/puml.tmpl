@@ -1,0 +1,48 @@
+@startuml
+
+{{range .Applications }}
+    {{range .Groups }}
+        node "{{ . }}" {
+    {{end}}
+    {{if .Group }}
+        node "{{ .Group }}" {
+    {{end}}
+    {{if (eq .Type "fileshare")}}
+    folder "FileShares" {
+        [{{ printf "%s" .Name }}] #GreenYellow
+    }
+    {{else if (eq .Type "scheduledtask")}}
+    frame "Scheduled tasks" {
+        [{{ printf "%s" .Name }}] #Orange
+    }
+    {{else if (eq .Type "windowsservice")}}
+    frame "Windows services" {
+        [{{ printf "%s" .Name }}] #Yellow
+    }
+    {{else if (eq .Type "database")}}
+        database "{{ .Name }} Db" {
+        [{{ printf "%s" .Name }}]
+        }
+    {{else}}
+        [{{ printf "%s" .Name }}]
+    {{end}}
+    {{if .Group }}
+        }
+    {{end}}
+    {{range .Groups }}
+        }
+    {{end}}
+{{end}}
+
+{{range .Applications }}
+    {{$app := .Name }}{{$type := .Type }}
+    {{range .Links }} 
+        {{if (eq $type "hidden")}}
+          {{ printf "%s" $app }} -[hidden]- {{ printf "%s" .Name }}
+        {{else}}
+            {{ printf "[%s]" $app }} --> {{ printf "[%s]" .Name }} 
+        {{end}}
+    {{end}}
+{{end}}
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+!include C4_Container.puml
+
+LAYOUT_TOP_DOWN
+
+{{range .Applications }}
+    {{range .Groups }}
+        System_Boundary({{ . }}, "{{ . }}") {
+    {{end}}
+    {{if .Group }}
+        System_Boundary({{ .Group }}, "{{ .Group }}") {
+    {{end}}
+    {{if (eq .Type "database")}}
+    ContainerDb({{ printf "%s" .Name }}, "{{ printf "%s" .Name }}", "{{ printf "%s" .Type }}")
+    {{else}}
+        Container({{ printf "%s" .Name }}, "{{ printf "%s" .Name }}", "{{ printf "%s" .Type }}")
+    {{end}}
+    {{if .Group }}
+        }
+    {{end}}
+    {{range .Groups }}
+        }
+    {{end}}
+{{end}}
+
+{{range .Applications }}
+    {{$app := .Name }}{{$type := .Type }}
+    {{range .Links }} 
+        {{if (eq $type "hidden")}}
+            Lay_D({{ printf "%s" $app }}, {{ printf "%s" .Name }})
+        {{else}}
+            Rel({{ printf "%s" $app }}, {{ printf "%s" .Name }}, "Uses")
+        {{end}}
+    {{end}}
+{{end}}
+
+@enduml
