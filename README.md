@@ -2,6 +2,18 @@
 
 Graphy is tool that allows you to delcaritively define the architecture of your system and will generate diagrams
 
+## Prerequisites
+
+* graphviz - <https://formulae.brew.sh/formula/graphviz>
+* plantuml - <https://www.npmjs.com/package/node-plantuml>
+
+The following commands are for MacOS:
+
+```sh
+brew install graphviz
+npm install node-plantuml -g
+```
+
 ## Example generate
 
 ```sh
